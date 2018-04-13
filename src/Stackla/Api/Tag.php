@@ -2,9 +2,10 @@
 
 namespace Stackla\Api;
 
-use Stackla\Core\StacklaModel;
 use Stackla\Core\StacklaDateTime;
+use Stackla\Core\StacklaModel;
 use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Class Details
  *
@@ -14,28 +15,28 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @package Stackla\Api
  *
- * @property-read integer    $id
- * @property-read integer    $stack_id
- * @property string     $tag
- * @property string     $slug
- * @property bool       $custom_slug
- * @property string     $type
- * @property bool       $publicly_visible
- * @property bool       $vode_enabled
- * @property string     $target
- * @property bool       $system_tag
- * @property integer    $priority
- * @property string     $custom_url
- * @property string     $price
- * @property string     $ext_product_id
- * @property string     $description
- * @property string     $image_small_url
- * @property integer    $image_small_width
- * @property integer    $image_small_height
- * @property string     $image_medium_url
- * @property integer    $image_medium_width
- * @property integer    $image_medium_height
- * @property-read \Stackla\Core\StacklaDateTime  $created_at
+ * @property-read integer $id
+ * @property-read integer $stack_id
+ * @property string $tag
+ * @property string $slug
+ * @property bool $custom_slug
+ * @property string $type
+ * @property bool $publicly_visible
+ * @property bool $vode_enabled
+ * @property string $target
+ * @property bool $system_tag
+ * @property integer $priority
+ * @property string $custom_url
+ * @property string $price
+ * @property string $ext_product_id
+ * @property string $description
+ * @property string $image_small_url
+ * @property integer $image_small_width
+ * @property integer $image_small_height
+ * @property string $image_medium_url
+ * @property integer $image_medium_width
+ * @property integer $image_medium_height
+ * @property-read StacklaDateTime $created_at
  */
 class Tag extends StacklaModel implements TagInterface
 {
@@ -61,7 +62,7 @@ class Tag extends StacklaModel implements TagInterface
      * @Assert\Length(min=2, max=255)
      * @Assert\Type(type="string", message="The value {{ value }} is not a valid {{ type }}")
      */
-     protected $_tag;
+    protected $_tag;
 
     /**
      * Stack id for current tag
@@ -234,7 +235,7 @@ class Tag extends StacklaModel implements TagInterface
     /**
      * UTC timestamp of when this Tag was created.
      *
-     * @var \Stackla\Core\StacklaDateTime
+     * @var StacklaDateTime
      */
     protected $_createdAt;
 
@@ -243,7 +244,7 @@ class Tag extends StacklaModel implements TagInterface
         $properties = $this->_propMap;
 
         foreach ($properties as $k => $v) {
-            if ($v instanceof \Stackla\Core\StacklaDateTime) {
+            if ($v instanceof StacklaDateTime) {
                 $properties[$k] = $v->getTimestamp();
             }
         }
@@ -253,7 +254,7 @@ class Tag extends StacklaModel implements TagInterface
 
     public function getByExtProductId($id)
     {
-        return parent::getById('ext:'.$id);
+        return parent::getById('ext:' . $id);
     }
 
     public function delete()

@@ -2,18 +2,17 @@
 
 namespace Stackla\Core;
 
-use \Stackla\Core\Request;
-
 /**
  * Credentials
  *
- * @packages Stackla\Core
+ * @package Stackla\Core
  *
- * @property    string     $host
- * @property    string     $stack
- * @property    string     $key
+ * @property    string $host
+ * @property    string $stack
+ * @property    string $key
  */
-class Credentials {
+class Credentials
+{
     /**
      * Credentials Type
      */
@@ -58,7 +57,7 @@ class Credentials {
 
     /**
      * OAuth2 access token expiring time
-     * @var timestamp
+     * @var int
      */
     public $expiredIn;
 
@@ -66,18 +65,18 @@ class Credentials {
      * OAuth2 state
      */
     private $state = "stackla-php-sdk";
+    private $apiKey;
 
     /**
      * Constructor
      *
-     * @param string    $host   API Host
-     * @param string    $token  API OAuth2 access token or normal Stackla API
+     * @param string $host API Host
+     * @param string $token API OAuth2 access token or normal Stackla API
      *                          key
-     * @param string    $stack  API stack
-     * @param string    $type   Authentication type, either TYPE_OAUTH2 or TYPE_APIKEY
+     * @param string $stack API stack
+     * @param string $type Authentication type, either TYPE_OAUTH2 or TYPE_APIKEY
      */
-    public function __construct($host = '', $token = '', $stack = '', $type =
-    Credentials::TYPE_OAUTH2)
+    public function __construct($host = '', $token = '', $stack = '', $type = Credentials::TYPE_OAUTH2)
     {
         $this->host = $host;
         $this->token = $token;
@@ -110,7 +109,7 @@ class Credentials {
         $this->host = $host;
     }
 
-    public function setKey($key)
+    public function setKey($apiKey)
     {
         $this->apiKey = $apiKey;
     }
@@ -124,15 +123,17 @@ class Credentials {
     {
         $this->stack = $stack;
     }
+
     /**
      * Generate access_token
      *
-     * @param string    $client_id
-     * @param string    $client_secret
-     * @param string    $access_code
-     * @param string    $redirect_uri
+     * @param string $client_id
+     * @param string $client_secret
+     * @param string $access_code
+     * @param string $redirect_uri
      *
      * @return $this
+     * @throws \Exception
      */
     public function generateToken($client_id, $client_secret, $access_code, $redirect_uri)
     {
@@ -152,9 +153,8 @@ class Credentials {
         $response = json_decode($json, true);
 
         if (isset($response['error']) && count($response['error'])) {
-            throw new \Exception("Error occure: " .
-            $response['error_description']);
-            return false;
+            throw new \Exception("Error occurred: " .
+                $response['error_description']);
         }
 
         $this->token = $response['access_token'];
@@ -167,9 +167,9 @@ class Credentials {
     /**
      * Generate access uri
      *
-     * @param string    $client_id
-     * @param string    $client_secret
-     * @param string    $redirect_uri
+     * @param string $client_id
+     * @param string $client_secret
+     * @param string $redirect_uri
      *
      * @return string
      */

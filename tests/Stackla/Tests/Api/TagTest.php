@@ -12,26 +12,27 @@ class TagTest extends \PHPUnit_Framework_TestCase
 {
     private $credentials;
     private $stack;
-
+    private $uniqId;
     public function __construct()
     {
         $this->credentials = new Credentials(API_HOST, ACCESS_TOKEN, API_STACK);
 
         $this->stack = new \Stackla\Api\Stack($this->credentials, API_HOST, API_STACK);
+        $this->uniqId = uniqid();
     }
 
     public function testCreate()
     {
         // Abort if we use a read only token
-        if (!empty(ACCESS_TOKEN) && ACCESS_TOKEN_PERMISSION == 'r') {
+        if (!ACCESS_TOKEN && ACCESS_TOKEN_PERMISSION == 'r') {
             $this->markTestSkipped(
               'This test need an ACCESS_TOKEN_PERMISSION with read and write permission.'
             );
         }
 
         $tag = $this->stack->instance('Tag');
-        $tag->tag = 'Test tag';
-        $tag->slug = 'Test tag slug';
+        $tag->tag = 'Test tag ' . $this->uniqId;
+        $tag->slug = 'Test tag slug ' . $this->uniqId;
         $tag->type = Tag::TYPE_CONTENT;
         $tag->custom_url = 'http://stackla.com/';
         $tag->publicly_visible = Tag::VISIBLE;

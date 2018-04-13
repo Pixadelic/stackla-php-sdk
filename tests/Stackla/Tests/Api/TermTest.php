@@ -14,18 +14,20 @@ class TermTest extends \PHPUnit_Framework_TestCase
 {
     private $credentials;
     private $stack;
+    private $uniqId;
 
     public function __construct()
     {
         $this->credentials = new Credentials(API_HOST, ACCESS_TOKEN, API_STACK);
 
         $this->stack = new \Stackla\Api\Stack($this->credentials, API_HOST, API_STACK);
+        $this->uniqId = uniqid();
     }
 
     public function testCreate()
     {
         // Abort if we use a read only token
-        if (!empty(ACCESS_TOKEN) && ACCESS_TOKEN_PERMISSION == 'r') {
+        if (!ACCESS_TOKEN && ACCESS_TOKEN_PERMISSION == 'r') {
             $this->markTestSkipped(
               'This test need an ACCESS_TOKEN_PERMISSION with read and write permission.'
             );
@@ -33,8 +35,8 @@ class TermTest extends \PHPUnit_Framework_TestCase
 
         // $term = new Term($this->credentials);
         $term = $this->stack->instance('term');
-        $term->name = 'Test term';
-        $term->display_name = 'Test term';
+        $term->name = 'Test term ' . $this->uniqId;
+        $term->display_name = 'Test term ' . $this->uniqId;
         $term->active = 1;
         $term->num_of_backfill = 0;
         $term->term = 'stacklalife';
@@ -81,7 +83,7 @@ class TermTest extends \PHPUnit_Framework_TestCase
     public function testCreateTwitterTerm()
     {
         // Abort if we use a read only token
-        if (!empty(ACCESS_TOKEN) && ACCESS_TOKEN_PERMISSION == 'r') {
+        if (!ACCESS_TOKEN && ACCESS_TOKEN_PERMISSION == 'r') {
             $this->markTestSkipped(
               'This test need an ACCESS_TOKEN_PERMISSION with read and write permission.'
             );
@@ -136,7 +138,7 @@ class TermTest extends \PHPUnit_Framework_TestCase
     public function testCreateInstagramTerm()
     {
         // Abort if we use a read only token
-        if (!empty(ACCESS_TOKEN) && ACCESS_TOKEN_PERMISSION == 'r') {
+        if (!ACCESS_TOKEN && ACCESS_TOKEN_PERMISSION == 'r') {
             $this->markTestSkipped(
               'This test need an ACCESS_TOKEN_PERMISSION with read and write permission.'
             );
@@ -191,7 +193,7 @@ class TermTest extends \PHPUnit_Framework_TestCase
     public function testCreateFacebookTerm()
     {
         // Abort if we use a read only token
-        if (!empty(ACCESS_TOKEN) && ACCESS_TOKEN_PERMISSION == 'r') {
+        if (!ACCESS_TOKEN && ACCESS_TOKEN_PERMISSION == 'r') {
             $this->markTestSkipped(
               'This test need an ACCESS_TOKEN_PERMISSION with read and write permission.'
             );

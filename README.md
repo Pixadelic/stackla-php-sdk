@@ -1,4 +1,6 @@
 # Stackla PHP SDK #
+[![Build Status](https://travis-ci.org/Stackla/stackla-php-sdk.svg?branch=master)](https://travis-ci.org/Stackla/stackla-php-sdk)
+
 Welcome to the Stackla PHP SDK GitHub repository!
 
 This SDK is intended for PHP developers to enable them to integrate Stackla RESTful APIs into their applications with greater ease. You can find more information on working with Stackla APIs on the [Stackla Developer Portal](http://developer.stackla.com/).
@@ -6,8 +8,22 @@ This SDK is intended for PHP developers to enable them to integrate Stackla REST
 We are continuously working on improving both the SDK and the documentation around it, so please feel free to give us feedback and any reports of issues to [platform@stackla.com](mailto:platform@stackla.com).
 
 ## System requirements ##
-* PHP >=5.3.3
+* PHP >= 5.4
 * [Composer](https://getcomposer.org/)
+
+## PHPUnit ##
+
+Required `env` variable:
+* ACCESS_TOKEN
+* API_STACK => Stackla stack short_name
+* API_HOST => `https://api.stackla.com/api/`
+* DEFAULT_FILTER_ID
+* DEFAULT TAG_ID
+* STACKLA_POST_TERM_ID
+
+```
+$ php ./vendor/bin/phpunit ---configuration phpunit.xml.dist
+```
 
 ## Great. How do I get this thing going? ##
 

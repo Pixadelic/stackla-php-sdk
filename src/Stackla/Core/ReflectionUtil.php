@@ -1,6 +1,7 @@
 <?php
 
 namespace Stackla\Core;
+
 use Stackla\Exception\StacklaConfigurationException;
 
 /**
@@ -80,7 +81,7 @@ class ReflectionUtil
         }
 
         if (isset($param)) {
-            $anno = preg_split("/[\s\[\]]+/", $param);
+            $anno = preg_split("/[\\s\\[\\]]+/", $param);
             return $anno[0];
         } else {
             throw new StacklaConfigurationException("Getter function for '$propertyName' in '$class' class should have a proper return type.");
@@ -92,6 +93,7 @@ class ReflectionUtil
      *
      * @param $class
      * @param $propertyName
+     * @param string $getset
      * @throws \RuntimeException
      * @return mixed
      */
@@ -144,6 +146,7 @@ class ReflectionUtil
             $annots = self::parse($refl->getDocComment());
             if (!$annots) return null;
 
+            $annotations = array();
             foreach ($annots[3] as $i => $annot) {
                 if (empty($annot)) continue;
                 $annotations[$annot] = empty($annots[1][$i]) ? $default : preg_replace("~^property((-|)([\w]+|))~", "$3", rtrim($annots[1][$i], " \t\n\r"));
@@ -173,6 +176,7 @@ class ReflectionUtil
 
         if (!$annots) return null;
 
+        $annotations = array();
         foreach ($annots[1] as $i => $annot) {
             $annotations[$annot] = empty($annots[2][$i]) ? true : rtrim($annots[2][$i], " \t\n\r");
         }
@@ -184,11 +188,12 @@ class ReflectionUtil
     // todo: smarter regexp
     private static function parse($docComment)
     {
-        if ( !preg_match_all(
+        if (!preg_match_all(
             '~\@([^\s@\(]+)[\t ]*(?:\(?([^\n\s@]+)\)?)?[\t ]*(\$(?:\(?([^\$\n\s@]+)\)?)?[\t ]*(?:\(?([^\n@]+)\)?))?~i',
             $docComment,
             $annots,
-            PREG_PATTERN_ORDER)) {
+            PREG_PATTERN_ORDER)
+        ) {
             return null;
         }
         return $annots;
@@ -217,7 +222,7 @@ class ReflectionUtil
     {
         return method_exists($class, "set" . ucfirst($propertyName)) ?
             "set" . ucfirst($propertyName) :
-            "set" . preg_replace_callback("/([_\-\s]?([a-z0-9]+))/", "self::replace_callback", $propertyName);
+            "set" . preg_replace_callback("/([_\\-\\s]?([a-z0-9]+))/", "self::replace_callback", $propertyName);
     }
 
     /**
@@ -232,6 +237,6 @@ class ReflectionUtil
     {
         return method_exists($class, "get" . ucfirst($propertyName)) ?
             "get" . ucfirst($propertyName) :
-            "get" . preg_replace_callback("/([_\-\s]?([a-z0-9]+))/", "self::replace_callback", $propertyName);
+            "get" . preg_replace_callback("/([_\\-\\s]?([a-z0-9]+))/", 'self::replace_callback', $propertyName);
     }
 }

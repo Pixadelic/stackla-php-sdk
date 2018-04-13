@@ -2,25 +2,25 @@
 
 namespace Stackla\Api;
 
+use Stackla\Core\StacklaDateTime;
 use Stackla\Core\StacklaModel;
-use Stackla\Api\Tag;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Filter
  *
- * @package Stakla\Api
+ * Stakla\Api
  *
- * @property-read integer                $id
- * @property string                 $name
- * @property integer                $enable
- * @property integer                $orders
- * @property string|enum            $sort
- * @property string[]               $networks
- * @property \Stackla\Api\Tag[]     $tags
- * @property string[]               $media
- * @property \Stackla\Api\Location  $geofence
- * @property string                 $filterByClaimed
+ * @property-read integer $id
+ * @property string $name
+ * @property integer $enable
+ * @property integer $orders
+ * @property string $sort
+ * @property string[] $networks
+ * @property Tag[] $tags
+ * @property string[] $media
+ * @property string $geofence
+ * @property string $filterByClaimed
  *
  * @return
  */
@@ -34,6 +34,11 @@ class Filter extends StacklaModel implements FilterInterface
     protected $endpoint = 'filters';
 
     /**
+     * @var Tile[]
+     */
+    public $contents;
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($only_updated = false)
@@ -41,13 +46,13 @@ class Filter extends StacklaModel implements FilterInterface
         $properties = $this->_propMap;
 
         foreach ($properties as $k => $v) {
-            if ($v instanceof \Stackla\Core\StacklaDateTime) {
+            if ($v instanceof StacklaDateTime) {
                 $properties[$k] = $v->getTimestamp();
             } elseif ($k === 'tags') {
                 $tags = array();
                 if (is_array($v)) {
                     foreach ($v as $tag) {
-                        if (is_object($tag) && get_class($tag) == get_class(new \Stackla\Api\Tag())) {
+                        if (is_object($tag) && get_class($tag) == get_class(new Tag())) {
                             $tags[] = $tag->id;
                         } else {
                             $tags[] = $tag;
@@ -114,7 +119,7 @@ class Filter extends StacklaModel implements FilterInterface
     /**
      * Tags
      *
-     * @var \Stackla\Api\Tag[]
+     * @var Tag[]
      *
      * @todo add array validation to validate the value type but skip the value validation because
      *       the value is only a place holder
@@ -148,7 +153,7 @@ class Filter extends StacklaModel implements FilterInterface
     /**
      * Media
      *
-     * @param string[]    $media
+     * @param string[] $media
      *
      * @return $this
      */
@@ -166,7 +171,7 @@ class Filter extends StacklaModel implements FilterInterface
     /**
      * Add network to networks list
      *
-     * $param string    $network
+     * @param string $network
      *
      * @return $this
      */
@@ -184,11 +189,11 @@ class Filter extends StacklaModel implements FilterInterface
     /**
      * Add tag to tags list
      *
-     * @param \Stackla\Api\Tag  $tag
+     * @param Tag $tag
      *
      * @return $this
      */
-    public function addTag(\Stackla\Api\Tag $tag)
+    public function addTag(Tag $tag)
     {
         if (!$this->tags) {
             $this->tags = array($tag);
@@ -212,11 +217,11 @@ class Filter extends StacklaModel implements FilterInterface
     /**
      * Delete single tag from term
      *
-     * @param \Stackla\Api\Tag  $tag
+     * @param Tag $tag
      *
      * @return $this
      */
-    public function deleteTag(\Stackla\Api\Tag $tag)
+    public function deleteTag(Tag $tag)
     {
         if ($this->tags) {
             $tagExist = false;
@@ -232,12 +237,14 @@ class Filter extends StacklaModel implements FilterInterface
                 $this->tags = $tags;
             }
         }
+
+        return $this;
     }
 
     /**
      * Add single media to media list
      *
-     * $param string    $media
+     * @param string $media
      *
      * @return $this
      */
@@ -255,13 +262,15 @@ class Filter extends StacklaModel implements FilterInterface
     /**
      * Filter's contents/tiles
      *
-     * @param \Stackla\Api\Tile[]   $contents
+     * @param Tile[] $contents
      *
      * @return $this
      */
     protected function setContents($contents)
     {
         $this->contents = $contents;
+
+        return $this;
     }
 
     public function getContents()
@@ -295,7 +304,7 @@ class Filter extends StacklaModel implements FilterInterface
                     $limit = $args[0];
                     $force = $args[1];
                 } else {
-                    $error = array (
+                    $error = array(
                         'index' => '1 and 2',
                         'type' => 'integer and integer for limit and page or integer and array for limit and options or integer and boolean for limit and force option'
                     );
@@ -353,7 +362,7 @@ class Filter extends StacklaModel implements FilterInterface
             $json = $this->request->sendGet($endpoint, $requestOptions);
 
             if ($json !== false) {
-                $tiles = new \Stackla\Api\Tile($this->configs, $json);
+                $tiles = new Tile($this->configs, $json);
                 if (count($tiles)) {
                     $contents = $tiles->getResults();
                     $this->setContents($contents);
