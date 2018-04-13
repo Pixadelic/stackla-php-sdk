@@ -2,7 +2,7 @@
     "name": "stackla/stackla-php-sdk",
     "description": "Stackla SDK API",
     "require": {
-        "guzzlehttp/guzzle": "4 - 5",
+        "guzzlehttp/guzzle": "^6.3",
         "symfony/validator": "2 - 3",
         "doctrine/annotations": "~1.2",
         "doctrine/cache": "~1",
